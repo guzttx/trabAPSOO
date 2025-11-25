@@ -6,6 +6,7 @@ import model.Categoria;
 import model.Fornecedor;
 import service.Estoque;
 import observer.AlertaEmail;
+import factory.ProdutoFactory;
 
 public class Main {
     public static void main(String[] args) {
@@ -33,11 +34,15 @@ public class Main {
                     System.out.print("Quantidade inicial: ");
                     int qtd = sc.nextInt();
                     sc.nextLine();
-                    System.out.print("Nome da categoria: ");
+                    System.out.print("Nome da categoria (Eletronico/Alimento/Outro): ");
                     String cat = sc.nextLine();
                     System.out.print("Nome do fornecedor: ");
                     String forn = sc.nextLine();
-                    Produto p = new Produto(nome, codigo, qtd, new Categoria(cat), new Fornecedor(forn));
+                    
+                    // Usando Factory Method Pattern para criar o produto apropriado
+                    Produto p = ProdutoFactory.criarProduto(nome, codigo, qtd, 
+                                                           new Categoria(cat), 
+                                                           new Fornecedor(forn));
                     estoque.addProduto(p);
                     break;
                 case 2:
