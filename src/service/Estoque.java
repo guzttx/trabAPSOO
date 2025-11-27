@@ -1,25 +1,31 @@
 package service;
 
-import model.Produto;
-import observer.AlertaEstoque;
 import java.util.ArrayList;
 import java.util.List;
+import model.Produto;
+import observer.AlertaEstoque;
+import strategy.EstrategiaReposicao;
 
 public class Estoque {
     private static Estoque instance;
     private List<Produto> produtos;
     private List<AlertaEstoque> observadores;
+    private EstrategiaReposicao estrategiaReposicao;
 
     private Estoque() {
         produtos = new ArrayList<>();
         observadores = new ArrayList<>();
     }
-
+    
     public static Estoque getInstance() {
         if (instance == null) {
             instance = new Estoque();
         }
         return instance;
+    }
+    
+    public void setEstrategiaReposicao(EstrategiaReposicao estrategiaReposicao) {
+        this.estrategiaReposicao = estrategiaReposicao;
     }
 
     public void addProduto(Produto p) {
@@ -44,6 +50,7 @@ public class Estoque {
                 p.setQuantidade(p.getQuantidade() - qtd);
                 System.out.println("Saída registrada. Quantidade atual: " + p.getQuantidade());
                 notificarObservadores(p);
+                sugerirReposicaoSeNecessario(p); //aqui entra o Strategy
                 return;
             }
         }
@@ -66,4 +73,17 @@ public class Estoque {
             obs.atualizar(p);
         }
     }
+    
+    private void sugerirReposicaoSeNecessario(Produto p) {
+        if (estrategiaReposicao == null) {
+            return;
+        }
+
+        int quantidadeSugerida = estrategiaReposicao.calcularQuantidadeReposicao(p);
+        if (quantidadeSugerida > 0) {
+            System.out.println("[Strategy] Sugestão de reposição para o produto "
+                    + p.getNome() + ": repor " + quantidadeSugerida + " unidades.");
+        }
+    }
+
 }

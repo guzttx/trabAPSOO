@@ -1,17 +1,23 @@
 package main;
 
+import factory.ProdutoFactory;
 import java.util.Scanner;
-import model.Produto;
 import model.Categoria;
 import model.Fornecedor;
-import service.Estoque;
+import model.Produto;
 import observer.AlertaEmail;
-import factory.ProdutoFactory;
+import service.Estoque;
+import strategy.ReposicaoConservadoraStrategy;
+// import strategy.ReposicaoAgressivaStrategy; //se quier mudar p uma estratégia de repo agressiva (mudar também linha 18)
 
 public class Main {
     public static void main(String[] args) {
         Estoque estoque = Estoque.getInstance();
         estoque.addObservador(new AlertaEmail());
+        // Definindo a política de reposição (Strategy) | Se quiser trocar a política em algum momento, basta chamar novamente:
+        estoque.setEstrategiaReposicao(new ReposicaoConservadoraStrategy()); // estoque.setEstrategiaReposicao(new ReposicaoAgressivaStrategy());
+
+
         Scanner sc = new Scanner(System.in);
         int opcao;
 
