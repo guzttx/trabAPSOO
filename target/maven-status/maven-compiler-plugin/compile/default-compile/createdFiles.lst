@@ -1,0 +1,15 @@
+model\ProdutoEletronico.class
+observer\AlertaEmail.class
+facade\SistemaEstoqueFacade.class
+model\ProdutoAlimento.class
+strategy\ReposicaoAgressivaStrategy.class
+model\Fornecedor.class
+strategy\ReposicaoConservadoraStrategy.class
+observer\AlertaEstoque.class
+service\Estoque.class
+main\Main.class
+model\ProdutoGenerico.class
+strategy\EstrategiaReposicao.class
+model\Categoria.class
+model\Produto.class
+factory\ProdutoFactory.class
