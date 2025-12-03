@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProdutoFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">controle-estoque</a> &gt; <a href="index.source.html" class="el_package">factory</a> &gt; <span class="el_source">ProdutoFactory.java</span></div><h1>ProdutoFactory.java</h1><pre class="source lang-java linenums">package factory;
+
+import model.*;
+import java.time.LocalDate;
+
+/**
+ * Factory Method Pattern - Padrão de Criação
+ * 
+ * Responsável por encapsular a lógica de criação de diferentes tipos de produtos.
+ * Esta classe decide qual subclasse de Produto instanciar baseado na categoria informada.
+ * 
+ * Vantagens:
+ * - Desacopla a criação de objetos do código cliente (Main)
+ * - Centraliza a lógica de decisão de qual tipo criar
+ * - Facilita adicionar novos tipos de produtos sem modificar o código cliente
+ * - Aplica o princípio Open/Closed (aberto para extensão, fechado para modificação)
+ */
+public class ProdutoFactory {
+    
+    // Construtor privado para prevenir instanciação
+<span class="fc" id="L21">    private ProdutoFactory() {</span>
+<span class="fc" id="L22">        throw new UnsupportedOperationException(&quot;Utility class&quot;);</span>
+    }
+    
+    // Constantes para categorias conhecidas
+    private static final String CATEGORIA_ELETRONICO = &quot;Eletronico&quot;;
+    private static final String CATEGORIA_ALIMENTO = &quot;Alimento&quot;;
+    
+    // Valores padrão para atributos específicos
+    private static final int GARANTIA_PADRAO_MESES = 12;
+    private static final int VALIDADE_PADRAO_DIAS = 30;
+
+    /**
+     * Factory Method principal - cria o tipo apropriado de produto baseado na categoria.
+     * 
+     * @param nome Nome do produto
+     * @param codigo Código único do produto
+     * @param quantidade Quantidade inicial em estoque
+     * @param categoria Categoria do produto (determina o tipo a ser criado)
+     * @param fornecedor Fornecedor do produto
+     * @return Instância da subclasse apropriada de Produto
+     */
+    public static Produto criarProduto(String nome, String codigo, int quantidade, 
+                                       Categoria categoria, Fornecedor fornecedor) {
+        
+<span class="fc" id="L46">        String nomeCategoria = categoria.getNome();</span>
+        
+        // Lógica de decisão: qual tipo de produto criar?
+<span class="pc bpc" id="L49" title="1 of 2 branches missed.">        if (nomeCategoria.equalsIgnoreCase(CATEGORIA_ELETRONICO)) {</span>
+<span class="nc" id="L50">            System.out.println(&quot;[Factory] Criando produto eletrônico com garantia de &quot; + GARANTIA_PADRAO_MESES + &quot; meses...&quot;);</span>
+<span class="nc" id="L51">            return new ProdutoEletronico(nome, codigo, quantidade, categoria, fornecedor, GARANTIA_PADRAO_MESES);</span>
+            
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">        } else if (nomeCategoria.equalsIgnoreCase(CATEGORIA_ALIMENTO)) {</span>
+<span class="nc" id="L54">            LocalDate dataValidade = LocalDate.now().plusDays(VALIDADE_PADRAO_DIAS);</span>
+<span class="nc" id="L55">            System.out.println(&quot;[Factory] Criando produto alimentício com validade até &quot; + dataValidade + &quot;...&quot;);</span>
+<span class="nc" id="L56">            return new ProdutoAlimento(nome, codigo, quantidade, categoria, fornecedor, dataValidade);</span>
+            
+        } else {
+<span class="fc" id="L59">            System.out.println(&quot;[Factory] Criando produto genérico...&quot;);</span>
+<span class="fc" id="L60">            return new ProdutoGenerico(nome, codigo, quantidade, categoria, fornecedor);</span>
+        }
+    }
+    
+    /**
+     * Sobrecarga do Factory Method para criação de Eletrônicos com garantia customizada.
+     * 
+     * @param nome Nome do produto
+     * @param codigo Código único do produto
+     * @param quantidade Quantidade inicial
+     * @param categoria Categoria do produto
+     * @param fornecedor Fornecedor do produto
+     * @param garantiaMeses Período de garantia em meses
+     * @return ProdutoEletronico com garantia customizada
+     */
+    public static Produto criarProdutoEletronico(String nome, String codigo, int quantidade,
+                                                 Categoria categoria, Fornecedor fornecedor, 
+                                                 int garantiaMeses) {
+<span class="nc" id="L78">        System.out.println(&quot;[Factory] Criando produto eletrônico com garantia customizada de &quot; + garantiaMeses + &quot; meses...&quot;);</span>
+<span class="nc" id="L79">        return new ProdutoEletronico(nome, codigo, quantidade, categoria, fornecedor, garantiaMeses);</span>
+    }
+    
+    /**
+     * Sobrecarga do Factory Method para criação de Alimentos com validade customizada.
+     * 
+     * @param nome Nome do produto
+     * @param codigo Código único do produto
+     * @param quantidade Quantidade inicial
+     * @param categoria Categoria do produto
+     * @param fornecedor Fornecedor do produto
+     * @param dataValidade Data de validade do produto
+     * @return ProdutoAlimento com validade customizada
+     */
+    public static Produto criarProdutoAlimento(String nome, String codigo, int quantidade,
+                                               Categoria categoria, Fornecedor fornecedor, 
+                                               LocalDate dataValidade) {
+<span class="nc" id="L96">        System.out.println(&quot;[Factory] Criando produto alimentício com validade customizada até &quot; + dataValidade + &quot;...&quot;);</span>
+<span class="nc" id="L97">        return new ProdutoAlimento(nome, codigo, quantidade, categoria, fornecedor, dataValidade);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

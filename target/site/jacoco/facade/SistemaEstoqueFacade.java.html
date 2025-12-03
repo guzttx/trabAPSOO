@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SistemaEstoqueFacade.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">controle-estoque</a> &gt; <a href="index.source.html" class="el_package">facade</a> &gt; <span class="el_source">SistemaEstoqueFacade.java</span></div><h1>SistemaEstoqueFacade.java</h1><pre class="source lang-java linenums">package facade;
+
+import model.Categoria;
+import model.Fornecedor;
+import model.Produto;
+import factory.ProdutoFactory;
+import observer.AlertaEstoque;
+import service.Estoque;
+
+public class SistemaEstoqueFacade {
+
+    private Estoque estoque;
+
+<span class="nc" id="L14">    public SistemaEstoqueFacade() {</span>
+<span class="nc" id="L15">        this.estoque = Estoque.getInstance();</span>
+<span class="nc" id="L16">    }</span>
+
+    public Categoria criarCategoria(String nome) {
+<span class="nc" id="L19">        return new Categoria(nome);</span>
+    }
+
+    public Fornecedor criarFornecedor(String nome) {
+<span class="nc" id="L23">        return new Fornecedor(nome);</span>
+    }
+
+    public Produto criarProduto(String nome, String codigo, int quantidade, Categoria categoria, Fornecedor fornecedor) {
+<span class="nc" id="L27">        return ProdutoFactory.criarProduto(nome, codigo, quantidade, categoria, fornecedor);</span>
+    }
+
+    public void adicionarProduto(Produto p) {
+<span class="nc" id="L31">        estoque.addProduto(p);</span>
+<span class="nc" id="L32">    }</span>
+
+    public void registrarEntrada(String codigo, int qtd) {
+<span class="nc" id="L35">        estoque.registrarEntrada(codigo, qtd);</span>
+<span class="nc" id="L36">    }</span>
+
+    public void registrarSaida(String codigo, int qtd) {
+<span class="nc" id="L39">        estoque.registrarSaida(codigo, qtd);</span>
+<span class="nc" id="L40">    }</span>
+
+    public void listarProdutos() {
+<span class="nc" id="L43">        estoque.listarProdutos();</span>
+<span class="nc" id="L44">    }</span>
+
+    public void registrarAlerta(AlertaEstoque alerta) {
+<span class="nc" id="L47">        estoque.addObservador(alerta);</span>
+<span class="nc" id="L48">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

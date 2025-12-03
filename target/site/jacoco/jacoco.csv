@@ -1,0 +1,14 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+controle-estoque,observer,AlertaEmail,15,0,2,0,4,0,3,0,2,0
+controle-estoque,factory,ProdutoFactory,61,30,2,2,9,7,4,2,2,2
+controle-estoque,service,Estoque,8,182,2,18,3,50,2,19,0,11
+controle-estoque,facade,SistemaEstoqueFacade,49,0,0,0,16,0,9,0,9,0
+controle-estoque,model,ProdutoAlimento,52,0,2,0,16,0,6,0,5,0
+controle-estoque,model,ProdutoEletronico,34,0,0,0,12,0,4,0,4,0
+controle-estoque,model,Produto,14,37,0,0,3,13,1,7,1,7
+controle-estoque,model,Categoria,0,9,0,0,0,4,0,2,0,2
+controle-estoque,model,ProdutoGenerico,0,22,0,0,0,8,0,2,0,2
+controle-estoque,model,Fornecedor,0,9,0,0,0,4,0,2,0,2
+controle-estoque,main,Main,151,0,8,0,50,0,8,0,2,0
+controle-estoque,strategy,ReposicaoAgressivaStrategy,22,0,2,0,8,0,4,0,3,0
+controle-estoque,strategy,ReposicaoConservadoraStrategy,3,21,1,1,1,8,1,3,0,3

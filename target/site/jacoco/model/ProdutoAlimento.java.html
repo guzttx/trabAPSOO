@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProdutoAlimento.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">controle-estoque</a> &gt; <a href="index.source.html" class="el_package">model</a> &gt; <span class="el_source">ProdutoAlimento.java</span></div><h1>ProdutoAlimento.java</h1><pre class="source lang-java linenums">package model;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+/**
+ * Subclasse de Produto específica para alimentos.
+ * Adiciona atributo de data de validade.
+ */
+public class ProdutoAlimento extends Produto {
+    private LocalDate dataValidade;
+
+    public ProdutoAlimento(String nome, String codigo, int quantidade, 
+                           Categoria categoria, Fornecedor fornecedor, LocalDate dataValidade) {
+<span class="nc" id="L15">        super(nome, codigo, quantidade, categoria, fornecedor);</span>
+<span class="nc" id="L16">        this.dataValidade = dataValidade;</span>
+<span class="nc" id="L17">    }</span>
+
+    public LocalDate getDataValidade() {
+<span class="nc" id="L20">        return dataValidade;</span>
+    }
+
+    public void setDataValidade(LocalDate dataValidade) {
+<span class="nc" id="L24">        this.dataValidade = dataValidade;</span>
+<span class="nc" id="L25">    }</span>
+
+    public boolean estaVencido() {
+<span class="nc" id="L28">        return LocalDate.now().isAfter(dataValidade);</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L33">        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(&quot;dd/MM/yyyy&quot;);</span>
+<span class="nc bnc" id="L34" title="All 2 branches missed.">        String status = estaVencido() ? &quot; [VENCIDO]&quot; : &quot;&quot;;</span>
+<span class="nc" id="L35">        return &quot;ProdutoAlimento{&quot; +</span>
+<span class="nc" id="L36">                &quot;nome='&quot; + getNome() + '\'' +</span>
+<span class="nc" id="L37">                &quot;, codigo='&quot; + getCodigo() + '\'' +</span>
+<span class="nc" id="L38">                &quot;, quantidade=&quot; + getQuantidade() +</span>
+<span class="nc" id="L39">                &quot;, categoria=&quot; + getCategoria().getNome() +</span>
+<span class="nc" id="L40">                &quot;, fornecedor=&quot; + getFornecedor().getNome() +</span>
+<span class="nc" id="L41">                &quot;, validade=&quot; + dataValidade.format(formatter) + status +</span>
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

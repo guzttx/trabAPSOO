@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Estoque.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">controle-estoque</a> &gt; <a href="index.source.html" class="el_package">service</a> &gt; <span class="el_source">Estoque.java</span></div><h1>Estoque.java</h1><pre class="source lang-java linenums">package service;
+
+import java.util.ArrayList;
+import java.util.List;
+import model.Produto;
+import observer.AlertaEstoque;
+import strategy.EstrategiaReposicao;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class Estoque {
+<span class="fc" id="L12">    private static final Logger logger = LoggerFactory.getLogger(Estoque.class);</span>
+    private static Estoque instance;
+    private List&lt;Produto&gt; produtos;
+    private List&lt;AlertaEstoque&gt; observadores;
+    private EstrategiaReposicao estrategiaReposicao;
+
+<span class="fc" id="L18">    private Estoque() {</span>
+<span class="fc" id="L19">        produtos = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L20">        observadores = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L21">    }</span>
+    
+    public static Estoque getInstance() {
+<span class="fc bfc" id="L24" title="All 2 branches covered.">        if (instance == null) {</span>
+<span class="fc" id="L25">            instance = new Estoque();</span>
+        }
+<span class="fc" id="L27">        return instance;</span>
+    }
+    
+    public void setEstrategiaReposicao(EstrategiaReposicao estrategiaReposicao) {
+<span class="fc" id="L31">        this.estrategiaReposicao = estrategiaReposicao;</span>
+<span class="fc" id="L32">    }</span>
+
+    public void addProduto(Produto p) {
+<span class="fc" id="L35">        produtos.add(p);</span>
+<span class="fc" id="L36">        logger.info(&quot;Produto adicionado: {}&quot;, p.getNome());</span>
+<span class="fc" id="L37">    }</span>
+
+    public void registrarEntrada(String codigo, int qtd) {
+<span class="fc bfc" id="L40" title="All 2 branches covered.">        for (Produto p : produtos) {</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">            if (p.getCodigo().equals(codigo)) {</span>
+<span class="fc" id="L42">                p.setQuantidade(p.getQuantidade() + qtd);</span>
+<span class="fc" id="L43">                logger.info(&quot;Entrada registrada. Quantidade atual: {}&quot;, p.getQuantidade());</span>
+<span class="fc" id="L44">                return;</span>
+            }
+<span class="fc" id="L46">        }</span>
+<span class="fc" id="L47">        logger.warn(&quot;Produto não encontrado: {}&quot;, codigo);</span>
+<span class="fc" id="L48">    }</span>
+
+    public void registrarSaida(String codigo, int qtd) {
+<span class="fc bfc" id="L51" title="All 2 branches covered.">        for (Produto p : produtos) {</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">            if (p.getCodigo().equals(codigo)) {</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">                if (p.getQuantidade() &lt; qtd) {</span>
+<span class="fc" id="L54">                    logger.error(&quot;Quantidade insuficiente para saída. Disponível: {}, Solicitado: {}&quot;, </span>
+<span class="fc" id="L55">                            p.getQuantidade(), qtd);</span>
+<span class="fc" id="L56">                    return;</span>
+                }
+<span class="fc" id="L58">                p.setQuantidade(p.getQuantidade() - qtd);</span>
+<span class="fc" id="L59">                logger.info(&quot;Saída registrada. Quantidade atual: {}&quot;, p.getQuantidade());</span>
+<span class="fc" id="L60">                notificarObservadores(p);</span>
+<span class="fc" id="L61">                sugerirReposicaoSeNecessario(p); //aqui entra o Strategy</span>
+<span class="fc" id="L62">                return;</span>
+            }
+<span class="fc" id="L64">        }</span>
+<span class="fc" id="L65">        logger.warn(&quot;Produto não encontrado: {}&quot;, codigo);</span>
+<span class="fc" id="L66">    }</span>
+
+    public void listarProdutos() {
+<span class="fc" id="L69">        logger.info(&quot;=== Produtos no Estoque ===&quot;);</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">        for (Produto p : produtos) {</span>
+<span class="fc" id="L71">            logger.info(&quot;{}&quot;, p);</span>
+<span class="fc" id="L72">        }</span>
+<span class="fc" id="L73">    }</span>
+
+    public void addObservador(AlertaEstoque obs) {
+<span class="fc" id="L76">        observadores.add(obs);</span>
+<span class="fc" id="L77">    }</span>
+
+    private void notificarObservadores(Produto p) {
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        for (AlertaEstoque obs : observadores) {</span>
+<span class="fc" id="L81">            obs.atualizar(p);</span>
+<span class="fc" id="L82">        }</span>
+<span class="fc" id="L83">    }</span>
+    
+    private void sugerirReposicaoSeNecessario(Produto p) {
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">        if (estrategiaReposicao == null) {</span>
+<span class="nc" id="L87">            return;</span>
+        }
+
+<span class="fc" id="L90">        int quantidadeSugerida = estrategiaReposicao.calcularQuantidadeReposicao(p);</span>
+<span class="pc bpc" id="L91" title="1 of 2 branches missed.">        if (quantidadeSugerida &gt; 0) {</span>
+<span class="nc" id="L92">            logger.info(&quot;[Strategy] Sugestão de reposição para o produto {}: repor {} unidades.&quot;,</span>
+<span class="nc" id="L93">                    p.getNome(), quantidadeSugerida);</span>
+        }
+<span class="fc" id="L95">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
