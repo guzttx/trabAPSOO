@@ -49,13 +49,17 @@ class ProdutoFactoryTest {
     }
 
     @Test
-    void testConstrutorPrivado() {
+    void testConstrutorPrivado() throws Exception {
         // Testa que não é possível instanciar a factory
         // (não há construtor público acessível)
-        assertThrows(Exception.class, () -> {
-            var constructor = ProdutoFactory.class.getDeclaredConstructor();
-            constructor.setAccessible(true);
+        var constructor = ProdutoFactory.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        
+        Exception exception = assertThrows(Exception.class, () -> {
             constructor.newInstance();
         });
+        
+        // Verifica que a exceção é do tipo esperado (UnsupportedOperationException)
+        assertTrue(exception.getCause() instanceof UnsupportedOperationException);
     }
 }
