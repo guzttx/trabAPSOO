@@ -5,11 +5,11 @@ import java.util.List;
 import model.Produto;
 import observer.AlertaEstoque;
 import strategy.EstrategiaReposicao;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+// import org.slf4j.Logger;
+// import org.slf4j.LoggerFactory;
 
 public class Estoque {
-    private static final Logger logger = LoggerFactory.getLogger(Estoque.class);
+    // private static final Logger logger = LoggerFactory.getLogger(Estoque.class);
     private static Estoque instance;
     private List<Produto> produtos;
     private List<AlertaEstoque> observadores; // listagem de observer (rg pattern)
@@ -33,42 +33,41 @@ public class Estoque {
 
     public void addProduto(Produto p) {
         produtos.add(p);
-        logger.info("Produto adicionado: {}", p.getNome());
+        System.out.println("Produto adicionado: " + p.getNome());
     }
 
     public void registrarEntrada(String codigo, int qtd) {
         for (Produto p : produtos) {
             if (p.getCodigo().equals(codigo)) {
                 p.setQuantidade(p.getQuantidade() + qtd);
-                logger.info("Entrada registrada. Quantidade atual: {}", p.getQuantidade());
+                System.out.println("Entrada registrada. Quantidade atual: " + p.getQuantidade());
                 return;
             }
         }
-        logger.warn("Produto não encontrado: {}", codigo);
+        System.out.println("Produto não encontrado: " + codigo);
     }
 
     public void registrarSaida(String codigo, int qtd) {
         for (Produto p : produtos) {
             if (p.getCodigo().equals(codigo)) {
                 if (p.getQuantidade() < qtd) {
-                    logger.error("Quantidade insuficiente para saída. Disponível: {}, Solicitado: {}", 
-                            p.getQuantidade(), qtd);
+                    System.out.println("Quantidade insuficiente para saída. Disponível: " + p.getQuantidade() + ", Solicitado: " + qtd);
                     return;
                 }
                 p.setQuantidade(p.getQuantidade() - qtd);
-                logger.info("Saída registrada. Quantidade atual: {}", p.getQuantidade());
+                System.out.println("Saída registrada. Quantidade atual: " + p.getQuantidade());
                 notificarObservadores(p);
-                sugerirReposicaoSeNecessario(p); //aqui entra o Strategy
+                sugerirReposicaoSeNecessario(p);
                 return;
             }
         }
-        logger.warn("Produto não encontrado: {}", codigo);
+        System.out.println("Produto não encontrado: " + codigo);
     }
 
     public void listarProdutos() {
-        logger.info("=== Produtos no Estoque ===");
+        System.out.println("=== Produtos no Estoque ===");
         for (Produto p : produtos) {
-            logger.info("{}", p);
+            System.out.println(p);
         }
     }
 
@@ -89,8 +88,7 @@ public class Estoque {
 
         int quantidadeSugerida = estrategiaReposicao.calcularQuantidadeReposicao(p);
         if (quantidadeSugerida > 0) {
-            logger.info("[Strategy] Sugestão de reposição para o produto {}: repor {} unidades.",
-                    p.getNome(), quantidadeSugerida);
+            System.out.println("[Strategy] Sugestão de reposição para o produto " + p.getNome() + ": repor " + quantidadeSugerida + " unidades.");
         }
     }
 

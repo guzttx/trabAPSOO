@@ -3,7 +3,10 @@ package facade;
 import model.Categoria;
 import model.Fornecedor;
 import model.Produto;
-import factory.ProdutoFactory;
+import factory.GerenciadorCriacao;
+import factory.GerenciadorEletronico;
+import factory.GerenciadorAlimento;
+import factory.GerenciadorGenerico;
 import observer.AlertaEstoque;
 import service.Estoque;
 
@@ -24,7 +27,18 @@ public class SistemaEstoqueFacade {
     }
 
     public Produto criarProduto(String nome, String codigo, int quantidade, Categoria categoria, Fornecedor fornecedor) {
-        return ProdutoFactory.criarProduto(nome, codigo, quantidade, categoria, fornecedor);
+        GerenciadorCriacao gerenciador;
+        
+        String nomeCategoria = categoria.getNome();
+        if (nomeCategoria.equalsIgnoreCase("Eletronico")) {
+            gerenciador = new GerenciadorEletronico(categoria, fornecedor);
+        } else if (nomeCategoria.equalsIgnoreCase("Alimento")) {
+            gerenciador = new GerenciadorAlimento(categoria, fornecedor);
+        } else {
+            gerenciador = new GerenciadorGenerico(categoria, fornecedor);
+        }
+        
+        return gerenciador.criarProduto(nome, codigo, quantidade);
     }
 
     public void adicionarProduto(Produto p) {

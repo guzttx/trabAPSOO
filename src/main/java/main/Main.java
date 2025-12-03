@@ -1,6 +1,9 @@
 package main;
 
-import factory.ProdutoFactory;
+import factory.GerenciadorCriacao;
+import factory.GerenciadorEletronico;
+import factory.GerenciadorAlimento;
+import factory.GerenciadorGenerico;
 import java.util.Scanner;
 import model.Categoria;
 import model.Fornecedor;
@@ -8,7 +11,6 @@ import model.Produto;
 import observer.AlertaEmail;
 import service.Estoque;
 import strategy.ReposicaoConservadoraStrategy;
-// import strategy.ReposicaoAgressivaStrategy; //se quier mudar p uma estratégia de repo agressiva (mudar também linha 18)
 
 public class Main {
     public static void main(String[] args) {
@@ -40,15 +42,40 @@ public class Main {
                     System.out.print("Quantidade inicial: ");
                     int qtd = sc.nextInt();
                     sc.nextLine();
-                    System.out.print("Nome da categoria (Eletronico/Alimento/Outro): ");
+                    
+                    System.out.println("\nTipo de produto:");
+                    System.out.println("1 - Eletronico (com garantia)");
+                    System.out.println("2 - Alimento (com validade)");
+                    System.out.println("3 - Generico");
+                    System.out.print("Escolha o tipo: ");
+                    int tipo = sc.nextInt();
+                    sc.nextLine();
+                    
+                    System.out.print("Nome da categoria: ");
                     String cat = sc.nextLine();
                     System.out.print("Nome do fornecedor: ");
                     String forn = sc.nextLine();
                     
-                    // Usando Factory Method Pattern para criar o produto apropriado
-                    Produto p = ProdutoFactory.criarProduto(nome, codigo, qtd, 
-                                                           new Categoria(cat), 
-                                                           new Fornecedor(forn));
+                    Categoria categoria = new Categoria(cat);
+                    Fornecedor fornecedor = new Fornecedor(forn);
+                    GerenciadorCriacao gerenciador;
+                    
+                    switch (tipo) {
+                        case 1:
+                            gerenciador = new GerenciadorEletronico(categoria, fornecedor);
+                            break;
+                        case 2:
+                            gerenciador = new GerenciadorAlimento(categoria, fornecedor);
+                            break;
+                        case 3:
+                            gerenciador = new GerenciadorGenerico(categoria, fornecedor);
+                            break;
+                        default:
+                            System.out.println("Tipo inválido! Criando produto genérico.");
+                            gerenciador = new GerenciadorGenerico(categoria, fornecedor);
+                    }
+                    
+                    Produto p = gerenciador.criarProduto(nome, codigo, qtd);
                     estoque.addProduto(p);
                     break;
                 case 2:
