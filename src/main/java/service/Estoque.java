@@ -50,6 +50,11 @@ public class Estoque {
     public void registrarSaida(String codigo, int qtd) {
         for (Produto p : produtos) {
             if (p.getCodigo().equals(codigo)) {
+                if (p.getQuantidade() < qtd) {
+                    logger.error("Quantidade insuficiente para saída. Disponível: {}, Solicitado: {}", 
+                            p.getQuantidade(), qtd);
+                    return;
+                }
                 p.setQuantidade(p.getQuantidade() - qtd);
                 logger.info("Saída registrada. Quantidade atual: {}", p.getQuantidade());
                 notificarObservadores(p);
