@@ -17,6 +17,11 @@ import java.time.LocalDate;
  */
 public class ProdutoFactory {
     
+    // Construtor privado para prevenir instanciação
+    private ProdutoFactory() {
+        throw new UnsupportedOperationException("Utility class");
+    }
+    
     // Constantes para categorias conhecidas
     private static final String CATEGORIA_ELETRONICO = "Eletronico";
     private static final String CATEGORIA_ALIMENTO = "Alimento";

@@ -5,8 +5,11 @@ import java.util.List;
 import model.Produto;
 import observer.AlertaEstoque;
 import strategy.EstrategiaReposicao;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Estoque {
+    private static final Logger logger = LoggerFactory.getLogger(Estoque.class);
     private static Estoque instance;
     private List<Produto> produtos;
     private List<AlertaEstoque> observadores;
@@ -30,37 +33,37 @@ public class Estoque {
 
     public void addProduto(Produto p) {
         produtos.add(p);
-        System.out.println("Produto adicionado: " + p.getNome());
+        logger.info("Produto adicionado: {}", p.getNome());
     }
 
     public void registrarEntrada(String codigo, int qtd) {
         for (Produto p : produtos) {
             if (p.getCodigo().equals(codigo)) {
                 p.setQuantidade(p.getQuantidade() + qtd);
-                System.out.println("Entrada registrada. Quantidade atual: " + p.getQuantidade());
+                logger.info("Entrada registrada. Quantidade atual: {}", p.getQuantidade());
                 return;
             }
         }
-        System.out.println("Produto não encontrado!");
+        logger.warn("Produto não encontrado: {}", codigo);
     }
 
     public void registrarSaida(String codigo, int qtd) {
         for (Produto p : produtos) {
             if (p.getCodigo().equals(codigo)) {
                 p.setQuantidade(p.getQuantidade() - qtd);
-                System.out.println("Saída registrada. Quantidade atual: " + p.getQuantidade());
+                logger.info("Saída registrada. Quantidade atual: {}", p.getQuantidade());
                 notificarObservadores(p);
                 sugerirReposicaoSeNecessario(p); //aqui entra o Strategy
                 return;
             }
         }
-        System.out.println("Produto não encontrado!");
+        logger.warn("Produto não encontrado: {}", codigo);
     }
 
     public void listarProdutos() {
-        System.out.println("=== Produtos no Estoque ===");
+        logger.info("=== Produtos no Estoque ===");
         for (Produto p : produtos) {
-            System.out.println(p);
+            logger.info("{}", p);
         }
     }
 
@@ -81,8 +84,8 @@ public class Estoque {
 
         int quantidadeSugerida = estrategiaReposicao.calcularQuantidadeReposicao(p);
         if (quantidadeSugerida > 0) {
-            System.out.println("[Strategy] Sugestão de reposição para o produto "
-                    + p.getNome() + ": repor " + quantidadeSugerida + " unidades.");
+            logger.info("[Strategy] Sugestão de reposição para o produto {}: repor {} unidades.",
+                    p.getNome(), quantidadeSugerida);
         }
     }
 
