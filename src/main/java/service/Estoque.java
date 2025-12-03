@@ -12,7 +12,7 @@ public class Estoque {
     private static final Logger logger = LoggerFactory.getLogger(Estoque.class);
     private static Estoque instance;
     private List<Produto> produtos;
-    private List<AlertaEstoque> observadores;
+    private List<AlertaEstoque> observadores; // listagem de observer (rg pattern)
     private EstrategiaReposicao estrategiaReposicao;
 
     private Estoque() {
@@ -72,11 +72,11 @@ public class Estoque {
         }
     }
 
-    public void addObservador(AlertaEstoque obs) {
+    public void addObservador(AlertaEstoque obs) { // attach do observer (rg pattern)
         observadores.add(obs);
     }
 
-    private void notificarObservadores(Produto p) {
+    private void notificarObservadores(Produto p) { //notify do observer (rg pattern de novo)
         for (AlertaEstoque obs : observadores) {
             obs.atualizar(p);
         }
